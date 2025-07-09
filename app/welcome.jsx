@@ -1,8 +1,22 @@
+import { Roboto_400Regular, Roboto_700Bold } from "@expo-google-fonts/roboto";
+import { useFonts } from "@expo-google-fonts/roboto/useFonts";
+import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export default function Welcome() {
+  const router = useRouter();
   const [activeData, setActiveData] = useState(0);
+
+  let [fontsLoaded] = useFonts({
+    Roboto_400Regular,
+    Roboto_700Bold,
+  });
+
+  if (!fontsLoaded) {
+    return null; // Or a loading indicator
+  }
+
   const welcome_data = [
     {
       heading: "Send Money Across Borders With ease at lower rates",
@@ -23,7 +37,7 @@ export default function Welcome() {
     },
   ];
   const handleSwitchData = () => {
-    setActiveData(activeData++);
+    activeData < 2 && setActiveData((prev) => prev + 1);
     console.log(activeData);
   };
   return (
@@ -32,20 +46,17 @@ export default function Welcome() {
       <View style={styles.contentArea}>
         {/* text section */}
         <View>
-          <Text style={styles.header}>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Labore,
-            unde.
-          </Text>
-          <Text style={styles.content}>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Labore,
-            unde.
-          </Text>
+          <Text style={styles.header}>{welcome_data[activeData].heading}</Text>
+          <Text style={styles.content}>{welcome_data[activeData].content}</Text>
         </View>
 
         {/* indicators sections */}
         <View style={styles.indicator_section}>
-          {welcome_data.map((item) => (
-            <View style={styles.indicator}>
+          {welcome_data.map((item, i) => (
+            <View
+              style={[styles.indicator, activeData == i && styles.active]}
+              key={i}
+            >
               {/*each indicator container */}
             </View>
           ))}
@@ -53,12 +64,31 @@ export default function Welcome() {
 
         {/* buttons sections */}
         <View style={styles.btns}>
-          <TouchableOpacity style={styles.btn_prev}>
-            <Text>Skip</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.btn_next}>
-            <Text style={{ color: "white" }}>Next</Text>
-          </TouchableOpacity>
+          {activeData < 2 && (
+            <TouchableOpacity
+              style={styles.btn_prev}
+              onPress={() => router.push("/get_started")}
+            >
+              <Text>Skip</Text>
+            </TouchableOpacity>
+          )}
+          {activeData < 2 && (
+            <TouchableOpacity
+              style={styles.btn_next}
+              onPress={handleSwitchData}
+            >
+              <Text style={{ color: "white" }}>Next</Text>
+            </TouchableOpacity>
+          )}
+
+          {activeData == 2 && (
+            <TouchableOpacity
+              style={styles.btn_get_started}
+              onPress={() => router.push("/get_started")}
+            >
+              <Text style={{ color: "white" }}>Get started</Text>
+            </TouchableOpacity>
+          )}
         </View>
       </View>
     </View>
@@ -81,13 +111,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 30,
   },
   header: {
-    fontWeight: "bold",
-    fontSize: 20,
+    fontFamily: "Roboto_700Bold",
+    fontSize: 25,
     textAlign: "center",
-    marginBottom: 30,
   },
   content: {
+    fontFamily: "Roboto_400Regular",
     textAlign: "center",
+    fontSize: 15,
+    marginTop: 30,
   },
 
   btns: {
@@ -113,6 +145,15 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#1e1e1e",
   },
+
+  btn_get_started: {
+    backgroundColor: "#1e1e1e",
+    width: "100%",
+    alignItems: "center",
+    borderRadius: 20,
+    paddingVertical: 5,
+  },
+
   indicator_section: {
     flexDirection: "row",
     marginTop: 30,
@@ -123,5 +164,9 @@ const styles = StyleSheet.create({
     height: 8,
     marginRight: 5,
     borderRadius: "100%",
+  },
+
+  active: {
+    backgroundColor: "#1e1e1e",
   },
 });
