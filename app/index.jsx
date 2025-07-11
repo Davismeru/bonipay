@@ -16,7 +16,7 @@ export default function Index() {
   }
 
   setTimeout(() => {
-    router.push("/welcome");
+    router.push("/kyc_pages/id_scanning");
   }, 10);
 
   return (
