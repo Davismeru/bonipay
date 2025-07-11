@@ -1,3 +1,4 @@
+import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
   Image,
@@ -14,9 +15,11 @@ export default function Signup() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [email, setEmail] = useState("");
 
+  const router = useRouter();
   const handleSubmit = () => {
     console.log("Password:", password);
     console.log("Email:", email);
+    router.push("/kyc_pages/personal_details");
   };
 
   return (

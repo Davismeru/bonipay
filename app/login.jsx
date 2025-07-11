@@ -1,4 +1,5 @@
-import { Link } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
+import { Link, useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
   StyleSheet,
@@ -13,13 +14,21 @@ export default function Login() {
   const [email, setEmail] = useState("");
 
   const handleSubmit = () => {
-    console.log("Name:", name);
     console.log("Email:", email);
     // Handle validation, submission, etc.
   };
-
+  const router = useRouter();
   return (
     <View style={styles.container}>
+      {/*back navigation button */}
+      <View style={styles.back_icon}>
+        <Ionicons
+          name="arrow-back"
+          size={24}
+          color="white"
+          onPress={() => router.push("/get_started")}
+        />
+      </View>
       <Text style={styles.logo}>BONIPAY</Text>
       <Text style={[styles.text, styles.login_text]}>Login</Text>
       <Text style={styles.text}>Enter your email and password to login</Text>
@@ -62,10 +71,16 @@ const styles = StyleSheet.create({
     backgroundColor: "#1e1e1e",
     height: "100%",
     paddingHorizontal: 30,
-    paddingTop: 80,
     flexDirection: "column",
     alignItems: "center",
   },
+
+  back_icon: {
+    alignSelf: "start",
+    marginBottom: 80,
+    marginTop: 20,
+  },
+
   logo: {
     color: "#4e4e4e",
     fontFamily: "Roboto_800ExtraBold",

@@ -1,5 +1,5 @@
-import { Fontisto, Ionicons } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
+import { FontAwesome5, Ionicons } from "@expo/vector-icons";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
   StyleSheet,
@@ -9,11 +9,12 @@ import {
   View,
 } from "react-native";
 
-export default function Forgot() {
-  const [email, setEmail] = useState("");
+export default function NewPassword() {
+  const [password, setPassword] = useState("");
+  const { user_email } = useLocalSearchParams();
   const router = useRouter();
   const handleSubmit = () => {
-    console.log("Email:", email);
+    console.log("Password:", password);
     router.push({
       pathname: "/verify_email",
       params: { user_email: email },
@@ -28,34 +29,34 @@ export default function Forgot() {
           name="arrow-back"
           size={24}
           color="white"
-          onPress={() => router.push("/login")}
+          onPress={() =>
+            router.push({
+              pathname: "/verify_email",
+              params: { user_email: user_email },
+            })
+          }
         />
       </View>
       <View style={styles.logo}>
-        <Fontisto
-          name="locked"
-          size={70}
-          color="#1e1e1e"
-          onPress={() => router.push("/welcome")}
-        />
+        <FontAwesome5 name="lock-open" size={70} color="#1e1e1e" />
       </View>
-      <Text style={[styles.text, styles.forgot_text]}>Forgot Password</Text>
+      <Text style={[styles.text, styles.forgot_text]}>Create New Password</Text>
       <Text
         style={[
           styles.text,
           { textAlign: "center", fontSize: 14, paddingHorizontal: 40 },
         ]}
       >
-        Please Enter Your Email Address To Recieve a Verification Code
+        Your New Password Must be Different {"\n"} from previously used
+        passwords
       </Text>
       <View style={styles.form}>
         <TextInput
           style={[styles.input, styles.text]}
-          placeholder="email@domain.com"
+          placeholder="new password"
           placeholderTextColor="gray"
-          value={email}
-          onChangeText={setEmail}
-          keyboardType="email-address"
+          value={password}
+          onChangeText={setPassword}
         />
 
         <TouchableOpacity style={styles.btn_send} onPress={handleSubmit}>

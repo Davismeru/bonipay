@@ -1,5 +1,5 @@
-import { MaterialIcons } from "@expo/vector-icons";
-import { useLocalSearchParams } from "expo-router";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useRef, useState } from "react";
 import {
   StyleSheet,
@@ -12,7 +12,7 @@ import {
 export default function VerifyEmail() {
   const [code, setCode] = useState("");
   const { user_email } = useLocalSearchParams();
-
+  const router = useRouter();
   //   hide middle characters of the email
   const handleMaskEmail = () => {
     const [username, domain] = user_email.split("@");
@@ -55,18 +55,30 @@ export default function VerifyEmail() {
     if (finalCode.length < 4) {
       console.log("code too short");
     } else {
-      console.log(finalCode);
+      router.push({
+        pathname: "/new_password",
+        params: { user_email: user_email },
+      });
     }
   };
 
   return (
     <View style={styles.container}>
+      {/*back navigation button */}
+      <View style={styles.back_icon}>
+        <Ionicons
+          name="arrow-back"
+          size={24}
+          color="white"
+          onPress={() => router.push("/login")}
+        />
+      </View>
       <View style={styles.logo}>
         <MaterialIcons
           name="mark-email-read"
           size={70}
           color="#1e1e1e"
-          onPress={() => router.push("/welcome")}
+          onPress={() => router.push("/forgot_password")}
         />
       </View>
       <Text style={[styles.text, styles.forgot_text]}>Verify Email</Text>
@@ -94,8 +106,12 @@ export default function VerifyEmail() {
           ))}
         </View>
 
+        <TouchableOpacity style={styles.btn_resend} onPress={handleSubmit}>
+          <Text style={{ color: "white" }}>Resend code</Text>
+        </TouchableOpacity>
+
         <TouchableOpacity style={styles.btn_send} onPress={handleSubmit}>
-          <Text style={{ color: "white" }}>send</Text>
+          <Text style={{ color: "white" }}>verify</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -107,10 +123,14 @@ const styles = StyleSheet.create({
     backgroundColor: "#1e1e1e",
     height: "100%",
     paddingHorizontal: 30,
-    paddingTop: 20,
     flexDirection: "column",
     alignItems: "center",
-    paddingTop: 150,
+  },
+
+  back_icon: {
+    alignSelf: "start",
+    marginBottom: 90,
+    marginTop: 20,
   },
   logo: {
     backgroundColor: "#fefefe",
@@ -148,6 +168,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 10,
     borderRadius: 10,
+  },
+
+  btn_resend: {
+    backgroundColor: "#1e1e1e",
+    alignItems: "center",
+    padding: 10,
+    borderRadius: 10,
+    borderWidth: 2,
+    borderColor: "white",
+    marginBottom: 20,
   },
 
   split_input: {
