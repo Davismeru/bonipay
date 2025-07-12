@@ -1,7 +1,7 @@
 import { Stack } from "expo-router";
 import ContextProvider from "../context/KycContext";
 
-export default function PersonalDetailsLayout() {
+export default function KycPagesLayout() {
   return (
     <ContextProvider>
       <Stack

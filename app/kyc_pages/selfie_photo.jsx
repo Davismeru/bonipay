@@ -39,7 +39,7 @@ export default function Selfie() {
 
   const handleSubmit = () => {
     console.log(formData);
-    router.push("/kyc_pages/selfie_photo");
+    router.push("/kyc_pages/confirmation");
   };
 
   return (
