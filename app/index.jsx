@@ -16,7 +16,7 @@ export default function Index() {
   }
 
   setTimeout(() => {
-    router.push("/get_started");
+    router.push("/transactions_pages/dashboard");
   }, 10);
 
   return (

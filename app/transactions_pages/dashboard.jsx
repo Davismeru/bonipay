@@ -1,8 +1,11 @@
 import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 import React from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export default function Dashboard() {
+  const router = useRouter();
+
   return (
     <View style={styles.container}>
       <Text style={[styles.white_text, { fontWeight: "bold", fontSize: 24 }]}>
@@ -28,20 +31,30 @@ export default function Dashboard() {
 
       {/* profiles */}
       <View style={[styles.profile_section]}>
-        <Text
-          style={[
-            styles.white_text,
-            { alignSelf: "flex-end", marginBottom: 5 },
-          ]}
+        <TouchableOpacity
+          onPress={() => router.push("/transactions_pages/accounts")}
         >
-          see all ➤
-        </Text>
+          <Text
+            style={[
+              styles.white_text,
+              { alignSelf: "flex-end", marginBottom: 5 },
+            ]}
+          >
+            see all ➤
+          </Text>
+        </TouchableOpacity>
 
         <View style={[styles.grey_bg, styles.profile_details]}>
           {["Jane Doe", "Mr Morningstar", "Davis Meru", "Lara Croft"].map(
             (profile, i) => {
               return (
-                <View style={styles.profile_card} key={i}>
+                <TouchableOpacity
+                  style={styles.profile_card}
+                  key={i}
+                  onPress={() =>
+                    router.push("/transactions_pages/send_to_profile")
+                  }
+                >
                   <Image
                     source={require("../../assets/images/profile_pic.jpg")}
                     style={[styles.profile_pic]}
@@ -50,7 +63,7 @@ export default function Dashboard() {
                   <Text style={[styles.white_text, styles.profile_name]}>
                     {profile?.slice(0, 7)}...
                   </Text>
-                </View>
+                </TouchableOpacity>
               );
             }
           )}
