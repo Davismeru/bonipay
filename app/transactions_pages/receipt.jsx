@@ -86,7 +86,7 @@ export default function ReceiptScreen() {
       <View style={styles.buttons}>
         <TouchableOpacity
           style={styles.homeBtn}
-          onPress={() => router.push("/transactions_pages/receipt")}
+          onPress={() => router.push("/transactions_pages/dashboard")}
         >
           <Text style={styles.sendText}>Home</Text>
         </TouchableOpacity>
@@ -124,6 +124,7 @@ const styles = StyleSheet.create({
   receipt: {
     backgroundColor: "#F5F5F5",
     marginTop: 30,
+    padding: 5,
   },
   header: {
     fontSize: 22,

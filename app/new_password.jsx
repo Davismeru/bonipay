@@ -16,8 +16,8 @@ export default function NewPassword() {
   const handleSubmit = () => {
     console.log("Password:", password);
     router.push({
-      pathname: "/verify_email",
-      params: { user_email: email },
+      pathname: "/login",
+      params: { user_email: user_email },
     });
   };
 

@@ -1,11 +1,17 @@
 import { Roboto_800ExtraBold } from "@expo-google-fonts/roboto";
 import { useFonts } from "@expo-google-fonts/roboto/useFonts";
 import { useRouter } from "expo-router";
-import React from "react";
+import React, { useEffect } from "react";
 import { Text, View } from "react-native";
 
 export default function Index() {
   const router = useRouter();
+
+  useEffect(() => {
+    setTimeout(() => {
+      router.push("/kyc_pages/proof_of_identity");
+    }, 50);
+  }, []);
 
   // load fonts
   let [fontsLoaded] = useFonts({
@@ -14,10 +20,6 @@ export default function Index() {
   if (!fontsLoaded) {
     return null;
   }
-
-  setTimeout(() => {
-    router.push("/transactions_pages/dashboard");
-  }, 10);
 
   return (
     <View

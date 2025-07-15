@@ -1,8 +1,8 @@
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, SimpleLineIcons } from "@expo/vector-icons";
 import { CameraView, useCameraPermissions } from "expo-camera";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useContextProvider } from "../context/KycContext";
 
@@ -10,28 +10,25 @@ export default function Selfie() {
   const router = useRouter();
   const { formData, setFormData } = useContextProvider();
 
+  const [facing, setFacing] = useState("front");
+
   const [permission, requestPermission] = useCameraPermissions();
-
-  const [showCamera, setShowCamera] = useState(false);
-  const [camFace, setCamFace] = useState("back");
-
-  // After permission is granted
-  useEffect(() => {
-    setCamFace("front");
-  }, [camFace]);
 
   if (!permission) {
     // Camera permissions are still loading.
+
     return <View />;
   }
 
   if (!permission.granted) {
     // Camera permissions are not granted yet.
+
     return (
       <View style={styles.container}>
         <Text style={styles.message}>
           We need your permission to show the camera
         </Text>
+
         <Button onPress={requestPermission} title="grant permission" />
       </View>
     );
@@ -39,22 +36,32 @@ export default function Selfie() {
 
   const handleSubmit = () => {
     console.log(formData);
-    router.push("/kyc_pages/confirmation");
+    router.push("/kyc_pages/selfie_photo");
   };
+
+  function refreshCamera() {
+    setFacing("back");
+
+    setTimeout(() => {
+      setFacing("front");
+    }, 1);
+  }
 
   return (
     <View style={styles.container}>
       {/* back button */}
+
       <View style={styles.back_icon}>
         <Ionicons
           name="arrow-back"
           size={24}
           color="white"
-          onPress={() => router.push("/kyc_pages/proof_of_identity")}
+          onPress={() => router.push("/kyc_pages/id_scanning")}
         />
       </View>
 
       {/* indicators */}
+
       <View style={styles.indicators}>
         <View style={styles.indicator}></View>
         <View style={styles.indicator}></View>
@@ -63,15 +70,16 @@ export default function Selfie() {
       </View>
 
       {/* header */}
+
       <View style={styles.header}>
         <View>
           <Text style={[styles.header_text, styles.header_text_bold]}>
             Selfie Photo
           </Text>
-          <Text style={styles.header_text}>
-            All legal details as on your ID
-          </Text>
+
+          <Text style={styles.header_text}>To verify the identity card</Text>
         </View>
+
         <LinearGradient style={styles.icon_section} colors={["orange", "red"]}>
           <View style={styles.inner_section}>
             <Ionicons name="person-outline" size={24} color="white" />
@@ -81,9 +89,17 @@ export default function Selfie() {
 
       {/* camera view section */}
 
-      <CameraView style={styles.camera} facing={camFace} />
+      <CameraView style={styles.camera} facing={facing}>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity style={styles.button} onPress={refreshCamera}>
+            <Text style={styles.text}>refresh camera</Text>
+            <SimpleLineIcons name="refresh" size={10} color="white" />
+          </TouchableOpacity>
+        </View>
+      </CameraView>
 
       {/* capture button */}
+
       <TouchableOpacity style={styles.capture_outer}>
         <View style={styles.capture_inner}></View>
       </TouchableOpacity>
@@ -102,6 +118,7 @@ const styles = StyleSheet.create({
     padding: 30,
     backgroundColor: "#1e1e1e",
   },
+
   message: {
     textAlign: "center",
     paddingBottom: 10,
@@ -115,6 +132,28 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
 
+  buttonContainer: {
+    flex: 1,
+    flexDirection: "row",
+    backgroundColor: "transparent",
+    padding: 10,
+  },
+
+  button: {
+    alignSelf: "flex-end",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 3,
+    backgroundColor: "rgba(0,100,150, 0.7)",
+    paddingHorizontal: 5,
+    borderRadius: 5,
+  },
+
+  text: {
+    fontSize: 10,
+    color: "white",
+  },
+
   back_icon: {
     marginBottom: 30,
   },
@@ -125,6 +164,7 @@ const styles = StyleSheet.create({
     gap: 5,
     marginBottom: 30,
   },
+
   active_indicator: {
     backgroundColor: "white",
     height: 8,
@@ -158,6 +198,7 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 16,
   },
+
   header_text_bold: {
     fontWeight: "bold",
   },
@@ -195,7 +236,6 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 30,
   },
 
   capture_inner: {
@@ -210,5 +250,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 10,
     borderRadius: 10,
+    marginTop: 30,
   },
 });
