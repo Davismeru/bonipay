@@ -9,8 +9,8 @@ export default function Index() {
 
   useEffect(() => {
     setTimeout(() => {
-      router.push("/kyc_pages/proof_of_identity");
-    }, 50);
+      router.push("/welcome");
+    }, 4000);
   }, []);
 
   // load fonts
