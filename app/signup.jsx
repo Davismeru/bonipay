@@ -7,113 +7,189 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  KeyboardAvoidingView,
+  Platform,
+  SafeAreaView,
+  ScrollView,
 } from "react-native";
+import axios from "axios";
+import { base_api_uri } from "../assets/constants";
 
 export default function Signup() {
   const [password, setPassword] = useState("");
 
   const [confirmPassword, setConfirmPassword] = useState("");
   const [email, setEmail] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [surname, setSurname] = useState("");
+  const [otherNames, setOtherNames] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+
+  const [error, setError] = useState("");
 
   const router = useRouter();
-  const handleSubmit = () => {
-    console.log("Password:", password);
-    console.log("Email:", email);
-    router.push("/kyc_pages/personal_details");
+  const handleSubmit = async () => {
+    if (password !== confirmPassword) {
+      setError("passwords dont match");
+    } else {
+      try {
+        const res = await axios.post(`${base_api_uri}/api/auth/register`, {
+          email: email,
+          password: password,
+          firstName: firstName,
+          surname: surname,
+          otherNames: otherNames,
+          phoneNumber: phoneNumber,
+        });
+
+        setError("");
+        console.log(res.data);
+      } catch (err) {
+        const topError = err.response.data.errors[0].msg;
+        setError(topError);
+        if (!topError) {
+          setError(false);
+        }
+      }
+    }
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.logo}>BONIPAY</Text>
-      <Text style={[styles.text, styles.login_text]}>Create an account</Text>
-      <Text style={styles.text}>Enter your email to signup for this app</Text>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#1e1e1e" }}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={{ flex: 1 }}
+      >
+        <ScrollView
+          contentContainerStyle={styles.container}
+          keyboardShouldPersistTaps="handled"
+        >
+          <Text style={styles.logo}>BONIPAY</Text>
+          <Text style={[styles.text, styles.login_text]}>
+            Create an account
+          </Text>
+          <Text style={styles.text}>
+            Enter your email to signup for this app
+          </Text>
 
-      {/* email and password section */}
-      <View style={styles.form}>
-        <TextInput
-          style={[styles.input, styles.text]}
-          placeholder="email@domain.com"
-          placeholderTextColor="gray"
-          value={email}
-          onChangeText={setEmail}
-          keyboardType="email-address"
-        />
-        <TextInput
-          style={[styles.input, styles.text]}
-          placeholder="password"
-          placeholderTextColor="gray"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry={true}
-        />
+          {/* email and password section */}
+          <View style={styles.form}>
+            <TextInput
+              style={[styles.input, styles.text]}
+              placeholder="first name"
+              placeholderTextColor="gray"
+              value={firstName}
+              onChangeText={setFirstName}
+            />
+            <TextInput
+              style={[styles.input, styles.text]}
+              placeholder="surname"
+              placeholderTextColor="gray"
+              value={surname}
+              onChangeText={setSurname}
+            />
+            <TextInput
+              style={[styles.input, styles.text]}
+              placeholder="other names"
+              placeholderTextColor="gray"
+              value={otherNames}
+              onChangeText={setOtherNames}
+            />
+            <TextInput
+              style={[styles.input, styles.text]}
+              placeholder="phone number"
+              placeholderTextColor="gray"
+              value={phoneNumber}
+              onChangeText={setPhoneNumber}
+            />
+            <TextInput
+              style={[styles.input, styles.text]}
+              placeholder="email@domain.com"
+              placeholderTextColor="gray"
+              value={email}
+              onChangeText={setEmail}
+              keyboardType="email-address"
+            />
+            <TextInput
+              style={[styles.input, styles.text]}
+              placeholder="password"
+              placeholderTextColor="gray"
+              value={password}
+              onChangeText={setPassword}
+              secureTextEntry={true}
+            />
 
-        <TextInput
-          style={[styles.input, styles.text]}
-          placeholder="confirm password"
-          placeholderTextColor="gray"
-          value={confirmPassword}
-          onChangeText={setConfirmPassword}
-          secureTextEntry={true}
-        />
+            <TextInput
+              style={[styles.input, styles.text]}
+              placeholder="confirm password"
+              placeholderTextColor="gray"
+              value={confirmPassword}
+              onChangeText={setConfirmPassword}
+              secureTextEntry={true}
+            />
 
-        <TouchableOpacity style={styles.btn_login} onPress={handleSubmit}>
-          <Text style={{ color: "white" }}>Continue</Text>
-        </TouchableOpacity>
-      </View>
+            {/* display error if it exists */}
+            {error && <Text style={styles.error}>{error}</Text>}
 
-      {/* or divider */}
-      <View style={styles.or}>
-        <View style={styles.line} />
-        <Text style={styles.strike_through}>or</Text>
-        <View style={styles.line} />
-      </View>
+            <TouchableOpacity style={styles.btn_login} onPress={handleSubmit}>
+              <Text style={{ color: "white" }}>Continue</Text>
+            </TouchableOpacity>
+          </View>
 
-      {/* apple and google buttons */}
-      <View style={styles.auth_btns}>
-        <TouchableOpacity style={styles.auth_btn}>
-          <Image
-            source={require("../assets/images/google.png")}
-            style={styles.auth_logo}
-          />
-          <Text style={styles.auth_text}>Continue with Google</Text>
-        </TouchableOpacity>
+          {/* or divider */}
+          <View style={styles.or}>
+            <View style={styles.line} />
+            <Text style={styles.strike_through}>or</Text>
+            <View style={styles.line} />
+          </View>
 
-        <TouchableOpacity style={styles.auth_btn}>
-          <Image
-            source={require("../assets/images/apple.png")}
-            style={styles.auth_logo}
-          />
-          <Text style={styles.auth_text}>Continue with Apple</Text>
-        </TouchableOpacity>
-      </View>
+          {/* apple and google buttons */}
+          <View style={styles.auth_btns}>
+            <TouchableOpacity style={styles.auth_btn}>
+              <Image
+                source={require("../assets/images/google.png")}
+                style={styles.auth_logo}
+              />
+              <Text style={styles.auth_text}>Continue with Google</Text>
+            </TouchableOpacity>
 
-      <View style={styles.footer}>
-        <Text style={styles.footer_text}>
-          By clicking continue, you agree to our
-        </Text>
-        <Text style={styles.footer_text}>Terms of service</Text>
-        <Text style={styles.footer_text}>and</Text>
-        <Text style={styles.footer_text}>Privacy Policy</Text>
-      </View>
-    </View>
+            <TouchableOpacity style={styles.auth_btn}>
+              <Image
+                source={require("../assets/images/apple.png")}
+                style={styles.auth_logo}
+              />
+              <Text style={styles.auth_text}>Continue with Apple</Text>
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.footer}>
+            <Text style={styles.footer_text}>
+              By clicking continue, you agree to our
+            </Text>
+            <Text style={styles.footer_text}>Terms of service</Text>
+            <Text style={styles.footer_text}>and</Text>
+            <Text style={styles.footer_text}>Privacy Policy</Text>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "#1e1e1e",
-    height: "100%",
+    flexGrow: 1,
     paddingHorizontal: 30,
-    paddingTop: 20,
     flexDirection: "column",
     alignItems: "center",
-    paddingTop: 70,
+    paddingTop: 30,
   },
   logo: {
     color: "#4e4e4e",
     fontFamily: "Roboto_800ExtraBold",
     fontSize: 50,
-    marginBottom: 50,
+    marginBottom: 20,
   },
   form: {
     padding: 20,
@@ -194,5 +270,9 @@ const styles = StyleSheet.create({
 
   footer_text: {
     color: "white",
+  },
+
+  error: {
+    color: "red",
   },
 });
